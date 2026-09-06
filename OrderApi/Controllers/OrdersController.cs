@@ -1,59 +1,79 @@
 namespace OrderApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using OrderApi.Data;
-using OrderApi.Services;
+using OrderApi.Contracts;
+using OrderApi.Domain.Entities;
+using OrderApi.Domain.Exceptions;
+using OrderApi.Domain.Ports;
 
+/// <summary>
+/// Driving (Inbound) Adapter.
+/// Translates incoming HTTP requests to Domain models and dispatches them to Ports.
+/// It contains NO domain business rules and NEVER exposes database entities.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class OrdersController : ControllerBase
 {
-    private readonly OrderService _orderService;
+    private readonly IOrderRepository _orderRepository;
 
-    public OrdersController(OrderService orderService)
+    public OrdersController(IOrderRepository orderRepository)
     {
-        _orderService = orderService;
+        _orderRepository = orderRepository;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateOrder([FromBody] Order order)
+    public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request, CancellationToken ct)
     {
-        // Business Rule Leakage: Controller performing core business validation
-        if (order.Items == null || order.Items.Count == 0)
+        try
         {
-            return BadRequest(new { error = "Validation Failed", message = "Order must contain at least one item." });
-        }
+            // 1. Translate DTOs to Domain Objects
+            var lines = (request.Items ?? new List<CreateOrderLineRequest>())
+                .Select(i => new OrderLine(i.ProductName, i.Quantity, i.UnitPrice));
 
-        if (string.IsNullOrWhiteSpace(order.CustomerName))
+            // 2. Instantiate Aggregate via Factory Method (Invariants enforced by the Domain!)
+            var order = Order.Create(request.CustomerName, lines);
+
+            // 3. Persist via Driven Port
+            await _orderRepository.AddAsync(order, ct);
+
+            // 4. Map Domain Model to Response DTO
+            var response = MapToResponse(order);
+
+            return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, response);
+        }
+        catch (DomainException ex)
         {
-            return BadRequest(new { error = "Validation Failed", message = "Customer name is required." });
+            // Catch domain invariant violations and translate to HTTP 400 Bad Request
+            return BadRequest(new { error = "Domain Invariant Violation", message = ex.Message });
         }
-
-        // Entity Exposure Flaw: The database model is accepted directly from the client request body.
-        // If a malicious client passes TotalAmount, CreatedAt, or Id, model binding binds directly to the entity.
-        var createdOrder = await _orderService.CreateOrderAsync(order);
-
-        // Entity Exposure Flaw: The database model is serialized directly to the HTTP response.
-        return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetOrderById(int id)
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetOrderById(Guid id, CancellationToken ct)
     {
-        var order = await _orderService.GetOrderByIdAsync(id);
+        var order = await _orderRepository.GetByIdAsync(id, ct);
         if (order == null)
         {
-            return NotFound(new { message = $"Order {id} not found." });
+            return NotFound(new { message = $"Order with ID {id} was not found." });
         }
 
-        // Entity Exposure Flaw: EF Core entity structure is leaked directly out of the API.
-        return Ok(order);
+        return Ok(MapToResponse(order));
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAllOrders()
+    private static OrderResponse MapToResponse(Order order)
     {
-        var orders = await _orderService.GetAllOrdersAsync();
-        return Ok(orders);
+        return new OrderResponse(
+            order.Id,
+            order.CustomerName,
+            order.CreatedAtUtc,
+            order.TotalAmount,
+            order.Lines.Select(l => new OrderLineResponse(
+                l.ProductName,
+                l.Quantity,
+                l.UnitPrice,
+                l.Subtotal
+            )).ToList()
+        );
     }
 }

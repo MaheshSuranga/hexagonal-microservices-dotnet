@@ -1,25 +1,25 @@
 using Microsoft.EntityFrameworkCore;
-using OrderApi.Data;
-using OrderApi.Services;
+using OrderApi.Domain.Ports;
+using OrderApi.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Presentation Layer
+// Driving Adapter (HTTP Presentation)
 builder.Services.AddControllers();
 
-// Business Logic Layer
-builder.Services.AddScoped<OrderService>();
+// Driven Adapter Configuration (Hexagonal Port Registration)
+builder.Services.AddDbContext<OrderDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=orders_hex.db"));
 
-// Data Access Layer (EF Core + SQLite)
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=orders.db"));
+// Dependency Inversion: Register Driven Port (IOrderRepository) to Driven Adapter (EfOrderRepository)
+builder.Services.AddScoped<IOrderRepository, EfOrderRepository>();
 
 var app = builder.Build();
 
-// Auto-migrate/create SQLite database on startup for demo simplicity
+// Ensure SQLite database and tables are created
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var db = scope.ServiceProvider.GetRequiredService<OrderDbContext>();
     db.Database.EnsureCreated();
 }
 

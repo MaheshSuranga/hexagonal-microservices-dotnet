@@ -437,6 +437,16 @@
         "runtime": {
           "lib/netcoreapp2.1/_._": {}
         }
+      },
+      "OrderApi.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/OrderApi.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OrderApi.Domain.dll": {}
+        }
       }
     }
   },
@@ -1025,11 +1035,17 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "OrderApi.Domain/1.0.0": {
+      "type": "project",
+      "path": "../OrderApi.Domain/OrderApi.Domain.csproj",
+      "msbuildProject": "../OrderApi.Domain/OrderApi.Domain.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "Microsoft.EntityFrameworkCore.Sqlite >= 8.0.13"
+      "Microsoft.EntityFrameworkCore.Sqlite >= 8.0.13",
+      "OrderApi.Domain >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1064,7 +1080,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj": {
+              "projectPath": "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

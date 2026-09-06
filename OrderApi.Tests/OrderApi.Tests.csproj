@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OrderApi\OrderApi.csproj" />
     <ProjectReference Include="..\OrderApi.Domain\OrderApi.Domain.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,7 @@
 @OrderApi_HostAddress = http://localhost:5000
 
-### 1. Create a Valid Order (Notice discount logic: 2 * 60 = 120 -> 10% discount = 108)
+### 1. Create a Valid Order (Hexagonal Driving Adapter with DTOs)
+# 2 keyboards @ $60 = $120 -> 10% discount applied by Domain = $108
 POST {{OrderApi_HostAddress}}/api/orders
 Content-Type: application/json
 
@@ -15,7 +16,7 @@ Content-Type: application/json
   ]
 }
 
-### 2. Create an Invalid Order (Empty Items - Caught by Controller validation)
+### 2. Create an Invalid Order (Empty Items -> Caught by Domain Invariant!)
 POST {{OrderApi_HostAddress}}/api/orders
 Content-Type: application/json
 
@@ -24,10 +25,22 @@ Content-Type: application/json
   "items": []
 }
 
-### 3. Get Order by ID
-GET {{OrderApi_HostAddress}}/api/orders/1
-Accept: application/json
+### 3. Create an Invalid Order (Empty Customer Name -> Caught by Domain Invariant!)
+POST {{OrderApi_HostAddress}}/api/orders
+Content-Type: application/json
 
-### 4. Get All Orders
-GET {{OrderApi_HostAddress}}/api/orders
+{
+  "customerName": "   ",
+  "items": [
+    {
+      "productName": "Mousepad",
+      "quantity": 1,
+      "unitPrice": 15.00
+    }
+  ]
+}
+
+### 4. Get Order by GUID (Replace {{orderId}} with GUID returned from POST)
+@orderId = 00000000-0000-0000-0000-000000000000
+GET {{OrderApi_HostAddress}}/api/orders/{{orderId}}
 Accept: application/json
