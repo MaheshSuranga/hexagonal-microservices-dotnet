@@ -63,3 +63,14 @@ D:\Works\hexagonal-microservices-dotnet\OrderApi\obj\Debug\net8.0\OrderApi.pdb
 D:\Works\hexagonal-microservices-dotnet\OrderApi\obj\Debug\net8.0\OrderApi.genruntimeconfig.cache
 D:\Works\hexagonal-microservices-dotnet\OrderApi\obj\Debug\net8.0\ref\OrderApi.dll
 D:\Works\hexagonal-microservices-dotnet\OrderApi\obj\Debug\net8.0\OrderApi.sourcelink.json
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\Azure.Core.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\Azure.Core.Amqp.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\Azure.Messaging.ServiceBus.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\Microsoft.Azure.Amqp.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\Npgsql.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\System.ClientModel.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\System.Memory.Data.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\OrderApi.Domain.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\OrderApi.Domain.pdb

@@ -2,24 +2,27 @@ namespace OrderApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 using OrderApi.Contracts;
+using OrderApi.Contracts.Events;
 using OrderApi.Domain.Entities;
 using OrderApi.Domain.Exceptions;
 using OrderApi.Domain.Ports;
 
 /// <summary>
 /// Driving (Inbound) Adapter.
-/// Translates incoming HTTP requests to Domain models and dispatches them to Ports.
-/// It contains NO domain business rules and NEVER exposes database entities.
+/// Translates incoming HTTP requests to Domain models, coordinates persistence,
+/// and dispatches integration events to the event publisher port.
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class OrdersController : ControllerBase
 {
     private readonly IOrderRepository _orderRepository;
+    private readonly IEventPublisher _eventPublisher;
 
-    public OrdersController(IOrderRepository orderRepository)
+    public OrdersController(IOrderRepository orderRepository, IEventPublisher eventPublisher)
     {
         _orderRepository = orderRepository;
+        _eventPublisher = eventPublisher;
     }
 
     [HttpPost]
@@ -31,20 +34,24 @@ public class OrdersController : ControllerBase
             var lines = (request.Items ?? new List<CreateOrderLineRequest>())
                 .Select(i => new OrderLine(i.ProductName, i.Quantity, i.UnitPrice));
 
-            // 2. Instantiate Aggregate via Factory Method (Invariants enforced by the Domain!)
+            // 2. Instantiate Aggregate via Factory Method (Invariants enforced by Domain Core)
             var order = Order.Create(request.CustomerName, lines);
 
-            // 3. Persist via Driven Port
+            // 3. Persist via Repository Driven Port
             await _orderRepository.AddAsync(order, ct);
 
-            // 4. Map Domain Model to Response DTO
+            // 4. Publish Integration Event via Messaging Driven Port
+            var orderPlacedEvent = OrderPlacedEvent.Create(order.Id, order.CustomerName, order.TotalAmount);
+            await _eventPublisher.PublishAsync(orderPlacedEvent, ct);
+
+            // 5. Map Domain Model to Response DTO
             var response = MapToResponse(order);
 
             return CreatedAtAction(nameof(GetOrderById), new { id = order.Id }, response);
         }
         catch (DomainException ex)
         {
-            // Catch domain invariant violations and translate to HTTP 400 Bad Request
+            // Catch domain invariant violations and return HTTP 400 Bad Request
             return BadRequest(new { error = "Domain Invariant Violation", message = ex.Message });
         }
     }

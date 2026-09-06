@@ -1,0 +1,34 @@
+## .NET Core & Visual Studio
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Build & Test Results
+TestResults/
+[Tt]est[Rr]esults/
+*.trx
+*.coverage
+*.coveragexml
+
+## Database files (SQLite local testing)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+## OS & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+*.swp
+*~
+
+## Sensitive local settings (use user-secrets or env vars for cloud credentials)
+# appsettings.Development.json
