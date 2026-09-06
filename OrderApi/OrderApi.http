@@ -1,0 +1,33 @@
+@OrderApi_HostAddress = http://localhost:5000
+
+### 1. Create a Valid Order (Notice discount logic: 2 * 60 = 120 -> 10% discount = 108)
+POST {{OrderApi_HostAddress}}/api/orders
+Content-Type: application/json
+
+{
+  "customerName": "Alice Johnson",
+  "items": [
+    {
+      "productName": "Ergonomic Keyboard",
+      "quantity": 2,
+      "unitPrice": 60.00
+    }
+  ]
+}
+
+### 2. Create an Invalid Order (Empty Items - Caught by Controller validation)
+POST {{OrderApi_HostAddress}}/api/orders
+Content-Type: application/json
+
+{
+  "customerName": "Bob Smith",
+  "items": []
+}
+
+### 3. Get Order by ID
+GET {{OrderApi_HostAddress}}/api/orders/1
+Accept: application/json
+
+### 4. Get All Orders
+GET {{OrderApi_HostAddress}}/api/orders
+Accept: application/json
