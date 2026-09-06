@@ -14,7 +14,7 @@ services:
     networks:
       - microservices-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U order_user -d orders_db"]
+      test: [ "CMD-SHELL", "pg_isready -U order_user -d orders_db" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -53,7 +53,7 @@ services:
     networks:
       - microservices-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U inventory_user -d inventory_db"]
+      test: [ "CMD-SHELL", "pg_isready -U inventory_user -d inventory_db" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -76,6 +76,33 @@ services:
     networks:
       - microservices-net
     restart: unless-stopped
+
+  # ===========================================================================
+  # Azure Service Bus Local Emulator
+  # ===========================================================================
+  servicebus-emulator:
+    image: mcr.microsoft.com/azure-messaging/servicebus-emulator:latest
+    container_name: servicebus-emulator
+    ports:
+      - "5672:5672" # AMQP protocol port
+    environment:
+      SQL_SERVER: servicebus-sql
+      ACCEPT_EULA: "Y"
+    volumes:
+      - ./ServiceBusEmulatorConfig.json:/ServiceBus_Emulator/Config/Config.json
+    depends_on:
+      - servicebus-sql
+    networks:
+      - microservices-net
+
+  servicebus-sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: servicebus-sql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "YourStrong@Password123"
+    networks:
+      - microservices-net
 
 # =============================================================================
 # Networks & Volumes (Isolation & Persistence)

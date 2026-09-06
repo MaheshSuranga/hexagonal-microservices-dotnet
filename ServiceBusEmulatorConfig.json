@@ -1,0 +1,37 @@
+{
+  "UserConfig": {
+    "Namespaces": [
+      {
+        "Name": "sb-emulator-ns",
+        "Queues": [],
+        "Topics": [
+          {
+            "Name": "order-placed-topic",
+            "Properties": {
+              "DefaultMessageTimeToLive": "PT1H"
+            },
+            "Subscriptions": [
+              {
+                "Name": "sub-email-service",
+                "Properties": {
+                  "DefaultMessageTimeToLive": "PT1H",
+                  "MaxDeliveryCount": 10
+                }
+              },
+              {
+                "Name": "sub-analytics-service",
+                "Properties": {
+                  "DefaultMessageTimeToLive": "PT1H",
+                  "MaxDeliveryCount": 10
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "Logging": {
+      "Type": "File"
+    }
+  }
+}
