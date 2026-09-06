@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cM3xuuQN6rY=",
+  "dgSpecHash": "CLqWJsmfuEc=",
   "success": true,
-  "projectFilePath": "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\OrderApi.csproj",
+  "projectFilePath": "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\OrderApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\msura\\.nuget\\packages\\microsoft.data.sqlite.core\\8.0.13\\microsoft.data.sqlite.core.8.0.13.nupkg.sha512",
     "C:\\Users\\msura\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.13\\microsoft.entityframeworkcore.8.0.13.nupkg.sha512",
@@ -21,6 +21,8 @@
     "C:\\Users\\msura\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
     "C:\\Users\\msura\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
     "C:\\Users\\msura\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "C:\\Users\\msura\\.nuget\\packages\\npgsql\\8.0.6\\npgsql.8.0.6.nupkg.sha512",
+    "C:\\Users\\msura\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.11\\npgsql.entityframeworkcore.postgresql.8.0.11.nupkg.sha512",
     "C:\\Users\\msura\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.6\\sqlitepclraw.bundle_e_sqlite3.2.1.6.nupkg.sha512",
     "C:\\Users\\msura\\.nuget\\packages\\sqlitepclraw.core\\2.1.6\\sqlitepclraw.core.2.1.6.nupkg.sha512",
     "C:\\Users\\msura\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.6\\sqlitepclraw.lib.e_sqlite3.2.1.6.nupkg.sha512",

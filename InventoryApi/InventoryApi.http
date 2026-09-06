@@ -1,0 +1,27 @@
+@InventoryApi_HostAddress = http://localhost:5001
+
+### 1. Check Inventory Stock for Keyboard
+GET {{InventoryApi_HostAddress}}/api/inventory/KEYBOARD-001
+Accept: application/json
+
+### 2. Check Inventory Stock for Non-Existent SKU (404)
+GET {{InventoryApi_HostAddress}}/api/inventory/DOES-NOT-EXIST
+Accept: application/json
+
+### 3. Reserve Stock (Valid Request)
+POST {{InventoryApi_HostAddress}}/api/inventory/reserve
+Content-Type: application/json
+
+{
+  "sku": "KEYBOARD-001",
+  "quantity": 2
+}
+
+### 4. Reserve Stock Exceeding Available Quantity (400 Insufficient Stock)
+POST {{InventoryApi_HostAddress}}/api/inventory/reserve
+Content-Type: application/json
+
+{
+  "sku": "KEYBOARD-001",
+  "quantity": 9999
+}

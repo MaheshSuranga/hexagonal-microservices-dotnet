@@ -1,4 +1,26 @@
 services:
+  # ===========================================================================
+  # Order Service Boundary (Database-per-Service)
+  # ===========================================================================
+  order-db:
+    image: postgres:16-alpine
+    container_name: order-db
+    environment:
+      POSTGRES_DB: orders_db
+      POSTGRES_USER: order_user
+      POSTGRES_PASSWORD: order_password
+    volumes:
+      - order-db-data:/var/lib/postgresql/data
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U order_user -d orders_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
   order-api:
     build:
       context: .
@@ -8,11 +30,63 @@ services:
       - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Data Source=/app/data/orders.db
-    volumes:
-      - order-db-data:/app/data
+      - ConnectionStrings__DefaultConnection=Host=order-db;Port=5432;Database=orders_db;Username=order_user;Password=order_password
+    depends_on:
+      order-db:
+        condition: service_healthy
+    networks:
+      - microservices-net
     restart: unless-stopped
+
+  # ===========================================================================
+  # Inventory Service Boundary (Database-per-Service)
+  # ===========================================================================
+  inventory-db:
+    image: postgres:16-alpine
+    container_name: inventory-db
+    environment:
+      POSTGRES_DB: inventory_db
+      POSTGRES_USER: inventory_user
+      POSTGRES_PASSWORD: inventory_password
+    volumes:
+      - inventory-db-data:/var/lib/postgresql/data
+    networks:
+      - microservices-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inventory_user -d inventory_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  inventory-api:
+    build:
+      context: .
+      dockerfile: InventoryApi/Dockerfile
+    container_name: inventory-api
+    ports:
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=inventory-db;Port=5432;Database=inventory_db;Username=inventory_user;Password=inventory_password
+    depends_on:
+      inventory-db:
+        condition: service_healthy
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+# =============================================================================
+# Networks & Volumes (Isolation & Persistence)
+# =============================================================================
+networks:
+  microservices-net:
+    driver: bridge
+    name: microservices-network
 
 volumes:
   order-db-data:
-    name: order_api_db_data
+    name: order_db_data
+  inventory-db-data:
+    name: inventory_db_data
