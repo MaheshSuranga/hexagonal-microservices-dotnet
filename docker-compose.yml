@@ -32,11 +32,26 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=order-db;Port=5432;Database=orders_db;Username=order_user;Password=order_password
       - ConnectionStrings__ServiceBus=Endpoint=sb://servicebus-emulator;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=SAS_KEY_VALUE;UseDevelopmentEmulator=true;
+      - ConnectionStrings__Redis=redis:6379
     depends_on:
       order-db:
         condition: service_healthy
       servicebus-emulator:
         condition: service_started
+      redis:
+        condition: service_started
+    networks:
+      - microservices-net
+    restart: unless-stopped
+
+  # ===========================================================================
+  # Distributed Cache Boundary (Redis)
+  # ===========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: order-redis
+    ports:
+      - "6379:6379"
     networks:
       - microservices-net
     restart: unless-stopped

@@ -1,7 +1,9 @@
 using Azure.Messaging.ServiceBus;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using OrderApi.Domain.Ports;
 using OrderApi.Infrastructure;
+using OrderApi.Infrastructure.Caching;
 using OrderApi.Infrastructure.Messaging;
 using OrderApi.Workers;
 
@@ -12,7 +14,17 @@ builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 
 // -----------------------------------------------------------------------------
-// Persistence Driven Adapter (EF Core)
+// Distributed Caching (Redis)
+// -----------------------------------------------------------------------------
+var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ?? "localhost:6379";
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnectionString;
+    options.InstanceName = "OrderService_";
+});
+
+// -----------------------------------------------------------------------------
+// Persistence Driven Adapter (EF Core) & Cache-Aside Decorator
 // -----------------------------------------------------------------------------
 var dbConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
                          ?? "Data Source=orders_hex.db";
@@ -30,7 +42,18 @@ builder.Services.AddDbContext<OrderDbContext>(options =>
     }
 });
 
-builder.Services.AddScoped<IOrderRepository, EfOrderRepository>();
+// 1. Register core EF Core repository as concrete type
+builder.Services.AddScoped<EfOrderRepository>();
+
+// 2. Decorate IOrderRepository with CachedOrderRepository via native Microsoft DI
+builder.Services.AddScoped<IOrderRepository>(sp =>
+{
+    var inner = sp.GetRequiredService<EfOrderRepository>();
+    var cache = sp.GetRequiredService<IDistributedCache>();
+    var logger = sp.GetRequiredService<ILogger<CachedOrderRepository>>();
+    var httpContextAccessor = sp.GetService<IHttpContextAccessor>();
+    return new CachedOrderRepository(inner, cache, logger, httpContextAccessor);
+});
 
 // -----------------------------------------------------------------------------
 // Messaging Driven Adapter & Background Workers (Azure Service Bus)
