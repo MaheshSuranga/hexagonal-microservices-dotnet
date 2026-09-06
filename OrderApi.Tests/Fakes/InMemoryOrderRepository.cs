@@ -10,10 +10,18 @@ using OrderApi.Domain.Ports;
 public class InMemoryOrderRepository : IOrderRepository
 {
     private readonly Dictionary<Guid, Order> _store = new();
+    private readonly List<OutboxMessage> _outbox = new();
 
     public Task AddAsync(Order order, CancellationToken ct = default)
     {
         _store[order.Id] = order;
+        return Task.CompletedTask;
+    }
+
+    public Task AddWithOutboxAsync(Order order, OutboxMessage outboxMessage, CancellationToken ct = default)
+    {
+        _store[order.Id] = order;
+        _outbox.Add(outboxMessage);
         return Task.CompletedTask;
     }
 
@@ -23,6 +31,7 @@ public class InMemoryOrderRepository : IOrderRepository
         return Task.FromResult(order);
     }
 
-    // Helper for test verification:
+    // Helpers for test verification:
     public int Count => _store.Count;
+    public IReadOnlyList<OutboxMessage> OutboxMessages => _outbox.AsReadOnly();
 }

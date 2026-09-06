@@ -124,6 +124,24 @@ public class CachedOrderRepository : IOrderRepository
         }
     }
 
+    public async Task AddWithOutboxAsync(Order order, OutboxMessage outboxMessage, CancellationToken ct = default)
+    {
+        // 1. Mutate state and stage outbox message atomically via inner persistence adapter
+        await _inner.AddWithOutboxAsync(order, outboxMessage, ct);
+
+        // 2. Cache-Aside Invalidation: Evict any stale cache entry for this aggregate
+        var cacheKey = $"order:{order.Id}";
+        try
+        {
+            await _cache.RemoveAsync(cacheKey, ct);
+            _logger.LogInformation("[PERF-CACHE] Cache invalidated for {CacheKey} after mutation.", cacheKey);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "[PERF-CACHE] Failed to invalidate {CacheKey} from Redis.", cacheKey);
+        }
+    }
+
     private void SetDiagnosticHeaders(string cacheStatus, double? durationMs)
     {
         try

@@ -78,6 +78,9 @@ else
     builder.Services.AddSingleton<IEventPublisher, LoggingEventPublisher>();
 }
 
+// 4. Register Transactional Outbox Background Dispatcher
+builder.Services.AddHostedService<OutboxProcessor>();
+
 var app = builder.Build();
 
 // Ensure database and schema are created at startup
@@ -85,6 +88,23 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<OrderDbContext>();
     db.Database.EnsureCreated();
+
+    // Guarantee OutboxMessages table exists even if database was created before adding Outbox
+    if (db.Database.IsSqlite())
+    {
+        db.Database.ExecuteSqlRaw("""
+            CREATE TABLE IF NOT EXISTS "OutboxMessages" (
+                "Id" TEXT NOT NULL CONSTRAINT "PK_OutboxMessages" PRIMARY KEY,
+                "OccurredOnUtc" TEXT NOT NULL,
+                "Type" TEXT NOT NULL,
+                "Payload" TEXT NOT NULL,
+                "ProcessedOnUtc" TEXT NULL,
+                "Error" TEXT NULL
+            );
+            CREATE INDEX IF NOT EXISTS "IX_OutboxMessages_ProcessedOnUtc_OccurredOnUtc" 
+            ON "OutboxMessages" ("ProcessedOnUtc", "OccurredOnUtc");
+        """);
+    }
 }
 
 app.UseAuthorization();

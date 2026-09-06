@@ -1,5 +1,6 @@
 namespace OrderApi.Controllers;
 
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using OrderApi.Contracts;
 using OrderApi.Contracts.Events;
@@ -10,19 +11,17 @@ using OrderApi.Domain.Ports;
 /// <summary>
 /// Driving (Inbound) Adapter.
 /// Translates incoming HTTP requests to Domain models, coordinates persistence,
-/// and dispatches integration events to the event publisher port.
+/// and writes integration events to the transactional outbox.
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class OrdersController : ControllerBase
 {
     private readonly IOrderRepository _orderRepository;
-    private readonly IEventPublisher _eventPublisher;
 
-    public OrdersController(IOrderRepository orderRepository, IEventPublisher eventPublisher)
+    public OrdersController(IOrderRepository orderRepository)
     {
         _orderRepository = orderRepository;
-        _eventPublisher = eventPublisher;
     }
 
     [HttpPost]
@@ -37,22 +36,25 @@ public class OrdersController : ControllerBase
             // 2. Instantiate Aggregate via Factory Method (Invariants enforced by Domain Core)
             var order = Order.Create(request.CustomerName, lines);
 
-            // 3. Persist via Repository Driven Port (COMMITTED TO DATABASE)
-            await _orderRepository.AddAsync(order, ct);
+            // 3. Create Integration Event and stage in OutboxMessage
+            var orderPlacedEvent = OrderPlacedEvent.Create(order.Id, order.CustomerName, order.TotalAmount);
+            var outboxMessage = OutboxMessage.Create(
+                type: nameof(OrderPlacedEvent),
+                payload: JsonSerializer.Serialize(orderPlacedEvent)
+            );
 
             // -----------------------------------------------------------------
-            // FAILURE INJECTION: Dual-Write Anomaly Demonstration
+            // FAILURE SIMULATION: Verify Atomic Rollback
             // -----------------------------------------------------------------
-            if (Request.Headers.ContainsKey("X-Simulate-Broker-Failure") ||
-                request.CustomerName.Contains("SIMULATE_BROKER_FAILURE", StringComparison.OrdinalIgnoreCase))
+            if (Request.Headers.ContainsKey("X-Simulate-Commit-Failure") ||
+                request.CustomerName.Contains("SIMULATE_COMMIT_FAILURE", StringComparison.OrdinalIgnoreCase))
             {
-                throw new TimeoutException(
-                    "[DUAL-WRITE ANOMALY] Network socket to Azure Service Bus timed out! Database write was already committed.");
+                throw new InvalidOperationException(
+                    "[TRANSACTION-ROLLBACK] Simulated failure occurred prior to commit. Verifying zero state mutation.");
             }
 
-            // 4. Publish Integration Event via Messaging Driven Port (NEVER REACHED)
-            var orderPlacedEvent = OrderPlacedEvent.Create(order.Id, order.CustomerName, order.TotalAmount);
-            await _eventPublisher.PublishAsync(orderPlacedEvent, ct);
+            // 4. ATOMIC COMMIT: Persist both Order and OutboxMessage in a single database transaction
+            await _orderRepository.AddWithOutboxAsync(order, outboxMessage, ct);
 
             // 5. Map Domain Model to Response DTO
             var response = MapToResponse(order);

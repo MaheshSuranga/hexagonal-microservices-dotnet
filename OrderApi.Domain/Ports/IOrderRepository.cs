@@ -10,5 +10,6 @@ using OrderApi.Domain.Entities;
 public interface IOrderRepository
 {
     Task AddAsync(Order order, CancellationToken ct = default);
+    Task AddWithOutboxAsync(Order order, OutboxMessage outboxMessage, CancellationToken ct = default);
     Task<Order?> GetByIdAsync(Guid id, CancellationToken ct = default);
 }

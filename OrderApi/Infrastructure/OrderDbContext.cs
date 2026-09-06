@@ -13,6 +13,7 @@ public class OrderDbContext : DbContext
     public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options) { }
 
     public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -57,6 +58,31 @@ public class OrderDbContext : DbContext
             // Use backing field access to preserve private collection encapsulation
             builder.Navigation(o => o.Lines)
                    .UsePropertyAccessMode(PropertyAccessMode.Field);
+        });
+
+        // =====================================================================
+        // Transactional Outbox Mapping
+        // =====================================================================
+        modelBuilder.Entity<OutboxMessage>(builder =>
+        {
+            builder.ToTable("OutboxMessages");
+            builder.HasKey(m => m.Id);
+
+            builder.Property(m => m.Type)
+                   .IsRequired()
+                   .HasMaxLength(250);
+
+            builder.Property(m => m.Payload)
+                   .IsRequired();
+
+            builder.Property(m => m.OccurredOnUtc)
+                   .IsRequired();
+
+            builder.Property(m => m.Error)
+                   .HasMaxLength(4000);
+
+            // Index for outbox dispatcher polling: quickly find unprocessed messages in chronological order
+            builder.HasIndex(m => new { m.ProcessedOnUtc, m.OccurredOnUtc });
         });
     }
 }

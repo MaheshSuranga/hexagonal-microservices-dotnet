@@ -34,6 +34,14 @@ public class EfOrderRepository : IOrderRepository
         await _context.SaveChangesAsync(ct);
     }
 
+    public async Task AddWithOutboxAsync(Order order, OutboxMessage outboxMessage, CancellationToken ct = default)
+    {
+        await _context.Orders.AddAsync(order, ct);
+        await _context.OutboxMessages.AddAsync(outboxMessage, ct);
+        // Atomic commit: EF Core executes all changes inside a single database transaction.
+        await _context.SaveChangesAsync(ct);
+    }
+
     public async Task<Order?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
         // 1. Diagnostic Timing Baseline: Instrument DB read latency
