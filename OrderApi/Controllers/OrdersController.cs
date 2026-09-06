@@ -37,10 +37,20 @@ public class OrdersController : ControllerBase
             // 2. Instantiate Aggregate via Factory Method (Invariants enforced by Domain Core)
             var order = Order.Create(request.CustomerName, lines);
 
-            // 3. Persist via Repository Driven Port
+            // 3. Persist via Repository Driven Port (COMMITTED TO DATABASE)
             await _orderRepository.AddAsync(order, ct);
 
-            // 4. Publish Integration Event via Messaging Driven Port
+            // -----------------------------------------------------------------
+            // FAILURE INJECTION: Dual-Write Anomaly Demonstration
+            // -----------------------------------------------------------------
+            if (Request.Headers.ContainsKey("X-Simulate-Broker-Failure") ||
+                request.CustomerName.Contains("SIMULATE_BROKER_FAILURE", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new TimeoutException(
+                    "[DUAL-WRITE ANOMALY] Network socket to Azure Service Bus timed out! Database write was already committed.");
+            }
+
+            // 4. Publish Integration Event via Messaging Driven Port (NEVER REACHED)
             var orderPlacedEvent = OrderPlacedEvent.Create(order.Id, order.CustomerName, order.TotalAmount);
             await _eventPublisher.PublishAsync(orderPlacedEvent, ct);
 
