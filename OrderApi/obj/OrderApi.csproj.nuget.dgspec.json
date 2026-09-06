@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\OrderApi.csproj": {}
+    "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\OrderApi.csproj": {}
   },
   "projects": {
-    "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj": {
+    "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj",
+        "projectUniqueName": "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj",
         "projectName": "OrderApi.Domain",
-        "projectPath": "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj",
+        "projectPath": "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj",
         "packagesPath": "C:\\Users\\msura\\.nuget\\packages\\",
-        "outputPath": "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\obj\\",
+        "outputPath": "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -70,14 +70,14 @@
         }
       }
     },
-    "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\OrderApi.csproj": {
+    "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\OrderApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\OrderApi.csproj",
+        "projectUniqueName": "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\OrderApi.csproj",
         "projectName": "OrderApi",
-        "projectPath": "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\OrderApi.csproj",
+        "projectPath": "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\OrderApi.csproj",
         "packagesPath": "C:\\Users\\msura\\.nuget\\packages\\",
-        "outputPath": "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\obj\\",
+        "outputPath": "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -99,8 +99,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj": {
-                "projectPath": "d:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj"
+              "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj": {
+                "projectPath": "D:\\Works\\hexagonal-microservices-dotnet\\OrderApi.Domain\\OrderApi.Domain.csproj"
               }
             }
           }

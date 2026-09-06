@@ -74,3 +74,6 @@ D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\System.ClientM
 D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\System.Memory.Data.dll
 D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\OrderApi.Domain.dll
 D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\OrderApi.Domain.pdb
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\bin\Debug\net8.0\StackExchange.Redis.dll
