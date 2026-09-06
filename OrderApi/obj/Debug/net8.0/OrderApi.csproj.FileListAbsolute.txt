@@ -62,3 +62,4 @@ D:\Works\hexagonal-microservices-dotnet\OrderApi\obj\Debug\net8.0\refint\OrderAp
 D:\Works\hexagonal-microservices-dotnet\OrderApi\obj\Debug\net8.0\OrderApi.pdb
 D:\Works\hexagonal-microservices-dotnet\OrderApi\obj\Debug\net8.0\OrderApi.genruntimeconfig.cache
 D:\Works\hexagonal-microservices-dotnet\OrderApi\obj\Debug\net8.0\ref\OrderApi.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi\obj\Debug\net8.0\OrderApi.sourcelink.json
