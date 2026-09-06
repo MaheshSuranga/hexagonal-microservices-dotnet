@@ -11,6 +11,7 @@
           "Microsoft.NET.Test.Sdk": "17.8.0",
           "Moq": "4.20.72",
           "OrderApi": "1.0.0",
+          "OrderApi.Domain": "1.0.0",
           "coverlet.collector": "6.0.0",
           "xunit": "2.5.3",
           "xunit.runner.visualstudio": "2.5.3"
@@ -1348,6 +1349,14 @@
             "fileVersion": "1.0.0.0"
           }
         }
+      },
+      "OrderApi.Domain/1.0.0": {
+        "runtime": {
+          "OrderApi.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
       }
     }
   },
@@ -2156,6 +2165,11 @@
       "hashPath": "xunit.runner.visualstudio.2.5.3.nupkg.sha512"
     },
     "OrderApi/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "OrderApi.Domain/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

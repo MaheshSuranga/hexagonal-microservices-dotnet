@@ -1,0 +1,12 @@
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\bin\Debug\net8.0\OrderApi.Domain.deps.json
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\bin\Debug\net8.0\OrderApi.Domain.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\bin\Debug\net8.0\OrderApi.Domain.pdb
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\obj\Debug\net8.0\OrderApi.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\obj\Debug\net8.0\OrderApi.Domain.AssemblyInfoInputs.cache
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\obj\Debug\net8.0\OrderApi.Domain.AssemblyInfo.cs
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\obj\Debug\net8.0\OrderApi.Domain.csproj.CoreCompileInputs.cache
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\obj\Debug\net8.0\OrderApi.Domain.sourcelink.json
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\obj\Debug\net8.0\OrderApi.Domain.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\obj\Debug\net8.0\refint\OrderApi.Domain.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\obj\Debug\net8.0\OrderApi.Domain.pdb
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Domain\obj\Debug\net8.0\ref\OrderApi.Domain.dll

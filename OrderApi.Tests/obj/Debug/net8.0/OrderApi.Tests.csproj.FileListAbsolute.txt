@@ -144,3 +144,5 @@ D:\Works\hexagonal-microservices-dotnet\OrderApi.Tests\obj\Debug\net8.0\refint\O
 D:\Works\hexagonal-microservices-dotnet\OrderApi.Tests\obj\Debug\net8.0\OrderApi.Tests.pdb
 D:\Works\hexagonal-microservices-dotnet\OrderApi.Tests\obj\Debug\net8.0\OrderApi.Tests.genruntimeconfig.cache
 D:\Works\hexagonal-microservices-dotnet\OrderApi.Tests\obj\Debug\net8.0\ref\OrderApi.Tests.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Tests\bin\Debug\net8.0\OrderApi.Domain.dll
+D:\Works\hexagonal-microservices-dotnet\OrderApi.Tests\bin\Debug\net8.0\OrderApi.Domain.pdb
