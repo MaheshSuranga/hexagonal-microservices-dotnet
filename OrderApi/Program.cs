@@ -13,6 +13,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 
+// Configure CORS for Frontend Development (expose diagnostic headers)
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .WithExposedHeaders("X-Cache", "X-Query-Duration-Ms");
+    });
+});
+
 // -----------------------------------------------------------------------------
 // Distributed Caching (Redis)
 // -----------------------------------------------------------------------------
@@ -107,6 +119,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
 

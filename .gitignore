@@ -30,5 +30,12 @@ Thumbs.db
 *.swp
 *~
 
+## Frontend & Node.js
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env*.local
+
 ## Sensitive local settings (use user-secrets or env vars for cloud credentials)
 # appsettings.Development.json
